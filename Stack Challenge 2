@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+typedef struct Stack {
+    int arr[MAX];
+    int top;
+} Stack;
+
+void initStack(Stack* s) {
+    s->top = -1;
+}
+
+int isFull(Stack* s) {
+    return s->top == MAX - 1;
+}
+
+int isEmpty(Stack* s) {
+    return s->top == -1;
+}
+
+void push(Stack* s, int value) {
+    if (!isFull(s)) {
+        s->arr[++s->top] = value;
+    }
+}
+
+int pop(Stack* s) {
+    if (!isEmpty(s)) {
+        return s->arr[s->top--];
+    }
+    return -1; // Return -1 if stack is empty
+}
+
+void displayStack(Stack* s) {
+    for (int i = 0; i <= s->top; i++) {
+        printf("%d ", s->arr[i]);
+    }
+}
+
+int main() {
+    Stack stack;
+    initStack(&stack);
+    
+    int N;
+    scanf("%d", &N);
+    
+    for (int i = 0; i < N; i++) {
+        int value;
+        scanf("%d", &value);
+        push(&stack, value);
+    }
+    
+    for (int i = 0; i < 2; i++) {
+        pop(&stack);
+    }
+    
+    for (int i = 0; i < 4; i++) {
+        int value;
+        scanf("%d", &value);
+        push(&stack, value);
+    }
+    
+    pop(&stack);
+    
+    for (int i = 0; i < 2; i++) {
+        int value;
+        scanf("%d", &value);
+        push(&stack, value);
+    }
+    
+    for (int i = 0; i < 3; i++) {
+        pop(&stack);
+    }
+    
+    displayStack(&stack);
+    
+    return 0;
+}
