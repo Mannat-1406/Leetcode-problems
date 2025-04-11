@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#define SIZE 100
+
+char stack[SIZE];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+char peek() {
+    return stack[top];
+}
+
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+int isOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+// Converts infix to postfix
+void infixToPostfix(char* infix, char* postfix) {
+    int i, j = 0;
+    char c;
+    for (i = 0; infix[i] != '\0'; i++) {
+        c = infix[i];
+
+        if (isdigit(c)) {
+            postfix[j++] = c;
+        } else if (c == '(') {
+            push(c);
+        } else if (c == ')') {
+            while (top != -1 && peek() != '(') {
+                postfix[j++] = pop();
+            }
+            pop(); // pop '('
+        } else if (isOperator(c)) {
+            while (top != -1 && precedence(peek()) >= precedence(c)) {
+                postfix[j++] = pop();
+            }
+            push(c);
+        }
+    }
+
+    while (top != -1) {
+        postfix[j++] = pop();
+    }
+
+    postfix[j] = '\0';
+}
+
+// Evaluates postfix expression
+int evaluatePostfix(char* postfix) {
+    int i;
+    int val1, val2;
+    int result;
+    int evalStack[SIZE];
+    int evalTop = -1;
+
+    for (i = 0; postfix[i] != '\0'; i++) {
+        char c = postfix[i];
+
+        if (
